@@ -1,9 +1,9 @@
 #' rasterPoints
 #' 
-#' Description of your package
+#' Plot scatter points using rasterImage.
 #' 
 #' @docType package
-#' @author you 
+#' @author Sérgio Fortier 
 #' @import Rcpp
 #' @importFrom Rcpp evalCpp
 #' @importFrom grDevices as.raster

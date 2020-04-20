@@ -2,27 +2,25 @@
 % Please edit documentation in R/RcppExports.R
 \name{data2raster}
 \alias{data2raster}
-\title{Leading NA}
+\title{data2raster}
 \usage{
 data2raster(x, col, usr, width, height, cex = 1L, ncores = 0L)
 }
 \arguments{
-\item{x}{An integer vector}
+\item{x}{matrix of dim = height X 2.}
 
-\item{col}{An integer vector}
+\item{col}{An character vector with color codes with length = nrow(x).}
 
-\item{usr}{An integer vector}
+\item{usr}{An double vector. See par("usr").}
 
-\item{width}{An integer vector}
+\item{width}{An integer.}
 
-\item{height}{An integer vector}
+\item{height}{An integer.}
 
-\item{cex}{An integer vector}
+\item{cex}{An integer.}
 
-\item{ncores}{Ncores}
+\item{ncores}{Number of cores to use. Default to 0 (max OpenMP avaiable cores).}
 }
 \description{
-This function returns a logical vector identifying if 
-there are leading NA, marking the leadings NA as TRUE and
-everything else as FALSE.
+This function convert a 2 column matrix of data in a img matrix.
 }

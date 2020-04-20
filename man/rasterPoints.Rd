@@ -8,23 +8,26 @@
 rasterPoints(x, col, cex = 1, interpolate = F)
 }
 \arguments{
-\item{x}{Vector of file names of the .FCS files to merge}
+\item{x}{Matrix of data to plot. Must have 2 columns.}
 
-\item{col}{Vector of common columns number}
+\item{col}{Character vector with lenght = nrow(x) or lenght = 1 (same color for all points).}
 
-\item{cex}{Vector of variable columns number}
+\item{cex}{Integer. See par("cex").}
 
-\item{interpolate}{Quantile normalize the common parameters before imputation}
+\item{interpolate}{Logical. Passed to rasterImage.}
 }
 \value{
-Merged flowFrame
+Nothing.
 }
 \description{
-Description of your package
+Plot scatter points using rasterImage.
 
-A function to merge flow cytometry data files (.FCS) and impute variable parameters using kNN on the common parameters.
+Plot scatter points using rasterImage.
 }
 \author{
-you
+Sérgio Fortier
 }
-\keyword{FCS}
+\keyword{plot,}
+\keyword{points.}
+\keyword{raster,}
+\keyword{scatter,}

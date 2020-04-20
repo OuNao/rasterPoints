@@ -21,6 +21,8 @@ CharacterMatrix data2raster(NumericMatrix x, CharacterVector col, NumericVector 
   data(_,0)=((data(_,0)-usr[0])/(usr[1]-usr[0]))*width;
   data(_,1)=((data(_,1)-usr[2])/(usr[3]-usr[2]))*height;
   int n=data.nrow();
+  CharacterVector colv(n);
+  if (col.length() == 1) colv.fill(col(0)); else colv=col;
   CharacterMatrix res(height, width);
   std::fill(res.begin(), res.end(), NA_STRING) ;
   int nthreads=omp_get_max_threads();
@@ -42,7 +44,7 @@ CharacterMatrix data2raster(NumericMatrix x, CharacterVector col, NumericVector 
         float distj = fabsf((float)j-center) + 0.5;
         float distk = fabsf((float)k-center) + 0.5;
         if (sqrt(pow(distj,2) + pow(distk,2)) > ((float)(cex)/2)+0.5) continue;
-        res(r2, c2)=(char*)col(i);
+        res(r2, c2)=(char*)colv(i);
       }
     }
   }
