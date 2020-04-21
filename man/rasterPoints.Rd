@@ -3,9 +3,9 @@
 \docType{package}
 \name{rasterPoints}
 \alias{rasterPoints}
-\title{rasterPoints}
+\title{Plot scatter points using rasterImage.}
 \usage{
-rasterPoints(x, col, cex = 1, interpolate = F)
+rasterPoints(x, col, cex = 1, interpolate = F, ncores = 0)
 }
 \arguments{
 \item{x}{Matrix of data to plot. Must have 2 columns.}
@@ -15,13 +15,13 @@ rasterPoints(x, col, cex = 1, interpolate = F)
 \item{cex}{Integer. See par("cex").}
 
 \item{interpolate}{Logical. Passed to rasterImage.}
+
+\item{ncores}{Integer. Number of cores used (OpenMP). Defaul = 0 (max avaiable cores).}
 }
 \value{
 Nothing.
 }
 \description{
-Plot scatter points using rasterImage.
-
 Plot scatter points using rasterImage.
 }
 \author{

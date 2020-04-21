@@ -1,8 +1,5 @@
-#' rasterPoints
-#' 
-#' Plot scatter points using rasterImage.
-#' 
 #' @docType package
+#' @title Plot scatter points using rasterImage.
 #' @author Sérgio Fortier 
 #' @import Rcpp
 #' @importFrom Rcpp evalCpp
