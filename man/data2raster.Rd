@@ -7,7 +7,7 @@
 data2raster(x, col, usr, width, height, cex = 1L, ncores = 0L)
 }
 \arguments{
-\item{x}{matrix of dim = height X 2.}
+\item{x}{Data matrix (ncol = 2).}
 
 \item{col}{An character vector with color codes with length = nrow(x).}
 
@@ -19,7 +19,7 @@ data2raster(x, col, usr, width, height, cex = 1L, ncores = 0L)
 
 \item{cex}{An integer.}
 
-\item{ncores}{Number of cores to use. Default to 0 (max OpenMP avaiable cores).}
+\item{ncores}{Number of cores to use. Default to 0 (use max OpenMP avaiable cores).}
 }
 \description{
 This function convert a 2 column matrix of data in a img matrix.

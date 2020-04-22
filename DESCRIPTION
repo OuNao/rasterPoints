@@ -1,11 +1,11 @@
 Package: rasterPoints
 Type: Package
-Title: What the Package Does in One 'Title Case' Line
+Title: plot scatter points using rasterImage and Rcpp.
 Version: 0.1
 Date: 2020-04-19
-Author: Your Name
-Maintainer: Your Name <your@email.com>
-Description: One paragraph description of what the package does as one or more full sentences.
+Author: Sérgio Fortier
+Maintainer: Sérgio Fortier <sergiofortier@yahoo.com.br>
+Description: R point is slo for big number of points (millions). A faster way is convert the data and color information to raster (using Rcpp) and plot using rasterImage.
 License: GPL (>= 2)
 Imports: Rcpp (>= 1.0.4)
 LinkingTo: Rcpp

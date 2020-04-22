@@ -8,13 +8,13 @@ using namespace Rcpp;
 //' 
 //' This function convert a 2 column matrix of data in a img matrix.
 //'
-//' @param x matrix of dim = height X 2.
+//' @param x Data matrix (ncol = 2).
 //' @param col An character vector with color codes with length = nrow(x).
 //' @param usr An double vector. See par("usr").
 //' @param width An integer.
 //' @param height An integer.
 //' @param cex An integer.
-//' @param ncores Number of cores to use. Default to 0 (max OpenMP avaiable cores).
+//' @param ncores Number of cores to use. Default to 0 (use max OpenMP avaiable cores).
 // [[Rcpp::export]]
 CharacterMatrix data2raster(NumericMatrix x, CharacterVector col, NumericVector usr, int width, int height, int cex=1, int ncores=0) {
   NumericMatrix data=clone(x);
