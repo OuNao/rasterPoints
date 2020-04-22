@@ -18,8 +18,8 @@ using namespace Rcpp;
 // [[Rcpp::export]]
 CharacterMatrix data2raster(NumericMatrix x, CharacterVector col, NumericVector usr, int width, int height, int cex=1, int ncores=0) {
   NumericMatrix data=clone(x);
-  data(_,0)=((data(_,0)-usr[0])/(usr[1]-usr[0]))*width;
-  data(_,1)=((data(_,1)-usr[2])/(usr[3]-usr[2]))*height;
+  data(_,0)=((data(_,0)-usr[0])/(usr[1]-usr[0]))*(width-1);
+  data(_,1)=((data(_,1)-usr[2])/(usr[3]-usr[2]))*(height-1);
   int n=data.nrow();
   CharacterVector colv(n);
   if (col.length() == 1) colv.fill(col(0)); else colv=col;
@@ -34,8 +34,8 @@ CharacterMatrix data2raster(NumericMatrix x, CharacterVector col, NumericVector 
   if (cex & 1) center = 0;
 #pragma omp parallel for num_threads(ncores)
   for (int i = 0; i < n; i++) {
-    int r=(height-1)-(int)data(i,1);
-    int c=(int)data(i,0);
+    int r=(height-2)-(int)round(data(i,1));
+    int c=(int)round(data(i,0))-1;
     for (int j = minidx; j <= maxidx; j++) {
       for (int k = minidx; k <= maxidx; k++) {
         int r2 = r+j;

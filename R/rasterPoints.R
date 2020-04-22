@@ -21,7 +21,7 @@ rasterPoints<-function(x, col, cex=1, interpolate = F, ncores = 0) {
   pict<-c(graphics::grconvertX(usr[1:2],"user", "ndc")*psize[1], graphics::grconvertY(usr[3:4], "user", "ndc") * psize[2])
   pict<-as.integer(pict)
   usr<-c(graphics::grconvertX(pict[1:2]/psize[1], "ndc","user"), graphics::grconvertY(pict[3:4]/psize[2], "ndc", "user"))
-  size<-c(pict[2]-pict[1], pict[4]-pict[3])
+  size<-c(pict[2]-pict[1]+1, pict[4]-pict[3]+1)
   img<-data2raster(x, col, usr, size[1], size[2], cex, ncores)
   rast<-as.raster(img)
   graphics::rasterImage(rast, 
