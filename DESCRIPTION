@@ -1,6 +1,6 @@
 Package: rasterPoints
 Type: Package
-Title: plot scatter points using rasterImage and Rcpp.
+Title: plot scatter points using rasterImage and Rcpp
 Version: 0.1
 Date: 2020-04-19
 Author: Sérgio Fortier

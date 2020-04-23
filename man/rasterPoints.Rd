@@ -5,7 +5,7 @@
 \alias{rasterPoints}
 \title{Plot scatter points using rasterImage.}
 \usage{
-rasterPoints(x, col, cex = 1, interpolate = F, ncores = 0)
+rasterPoints(x, col = "black", cex = 1, interpolate = F, ncores = 0)
 }
 \arguments{
 \item{x}{Matrix of data to plot. Must have 2 columns.}
@@ -26,14 +26,13 @@ Plot scatter points using rasterImage.
 }
 \examples{
 data<-matrix(rnorm(10^6), ncol = 2)
-mycol<-densCols(data, colramp = rainbow)
 system.time({
   plot(data, type="n")
-  points(data, pch = ".", type = "p", cex=1, col = mycol)
+  points(data, pch = ".", type = "p", cex=1, col = "blue")
 })
 system.time({
   plot(data, type="n")
-  rasterPoints(data, cex=1, col = mycol)
+  rasterPoints(data, cex=1, col = "blue")
 })
 }
 \author{
