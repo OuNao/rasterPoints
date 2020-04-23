@@ -24,6 +24,18 @@ Nothing.
 \description{
 Plot scatter points using rasterImage.
 }
+\examples{
+data<-matrix(rnorm(10^6), ncol = 2)
+mycol<-densCols(data, colramp = rainbow)
+system.time({
+  plot(data, type="n")
+  points(data, pch = ".", type = "p", cex=1, col = mycol)
+})
+system.time({
+  plot(data, type="n")
+  rasterPoints(data, cex=1, col = mycol)
+})
+}
 \author{
 Sérgio Fortier
 }

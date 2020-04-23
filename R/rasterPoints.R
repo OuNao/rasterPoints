@@ -8,6 +8,17 @@
 #' @param ncores Integer. Number of cores used (OpenMP). Defaul = 0 (max avaiable cores).
 #' @return Nothing.
 #' @keywords raster, scatter, plot, points.
+#' @examples 
+#' data<-matrix(rnorm(10^6), ncol = 2)
+#' mycol<-densCols(data, colramp = rainbow)
+#' system.time({
+#'   plot(data, type="n")
+#'   points(data, pch = ".", type = "p", cex=1, col = mycol)
+#' })
+#' system.time({
+#'   plot(data, type="n")
+#'   rasterPoints(data, cex=1, col = mycol)
+#' })
 #' @export
 rasterPoints<-function(x, col, cex=1, interpolate = F, ncores = 0) {
   if (!is.matrix(x) || ncol(x)!=2 || nrow(x)<1) stop("x must be a matrix with 2 columns and >0 rows!", call. = F)
