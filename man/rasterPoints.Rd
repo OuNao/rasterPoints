@@ -5,7 +5,7 @@
 \alias{rasterPoints}
 \title{Plot scatter points using rasterImage.}
 \usage{
-rasterPoints(x, col = "black", cex = 1, interpolate = F, ncores = 0)
+rasterPoints(x, col = "black", cex = 1, interpolate = F, ncores = 0, ...)
 }
 \arguments{
 \item{x}{Matrix of data to plot. Must have 2 columns.}
@@ -17,12 +17,14 @@ rasterPoints(x, col = "black", cex = 1, interpolate = F, ncores = 0)
 \item{interpolate}{Logical. Passed to rasterImage.}
 
 \item{ncores}{Integer. Number of cores used (OpenMP). Defaul = 0 (max avaiable cores).}
+
+\item{...}{Graphic parameters passed to rasterImage/plot (see par()).}
 }
 \value{
 Nothing.
 }
 \description{
-Plot scatter points using rasterImage.
+Plot scatter points using rasterImage. Open a graphic device if grDevices::dev.cur() == 1 (null device).
 }
 \examples{
 data<-matrix(rnorm(10^6), ncol = 2)

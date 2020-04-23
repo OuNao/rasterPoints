@@ -1,11 +1,12 @@
 #' @title rasterPoints.
 #'
-#' @description Plot scatter points using rasterImage.
+#' @description Plot scatter points using rasterImage. Open a graphic device if grDevices::dev.cur() == 1 (null device).
 #' @param x Matrix of data to plot. Must have 2 columns.
 #' @param col Character vector with lenght = nrow(x) or lenght = 1 (same color for all points).
 #' @param cex Integer. See par("cex").
 #' @param interpolate Logical. Passed to rasterImage.
 #' @param ncores Integer. Number of cores used (OpenMP). Defaul = 0 (max avaiable cores).
+#' @param ... Graphic parameters passed to rasterImage/plot (see par()).
 #' @return Nothing.
 #' @keywords raster, scatter, plot, points.
 #' @examples 
@@ -19,13 +20,16 @@
 #'   rasterPoints(data, cex=1, col = "blue")
 #' })
 #' @export
-rasterPoints<-function(x, col="black", cex=1, interpolate = F, ncores = 0) {
+rasterPoints<-function(x, col="black", cex=1, interpolate = F, ncores = 0, ...) {
   if (!is.matrix(x) || ncol(x)!=2 || nrow(x)<1) stop("x must be a matrix with 2 columns and >0 rows!", call. = F)
   if (!is.vector(col) || !is.character(col) || (length(col)!=1 && length(col) != nrow(x))) stop("col mus be a character vector of lenght 1 or nrow(x)", call. = F)
   if (!is.vector(cex) || !is.numeric(cex) || cex!=as.integer(cex) || length(cex)!=1) stop("cex must be a integer (integer vector of lenght = 1).", call. = F)
   if (!is.vector(interpolate) || !is.logical(interpolate) || length(interpolate)!=1) stop("interpolate must be a logical (TRUE or FALSE)", call. = F)
   if (!is.vector(ncores) || !is.numeric(ncores) || ncores!=as.integer(ncores) || length(ncores)!=1) stop("ncores must be a integer (integer vector of lenght = 1).", call. = F)
   if (length(col)==1) col=do.call(grDevices::rgb, as.list(grDevices::col2rgb(col)/255))
+  if(grDevices::dev.cur() == 1) {
+    graphics::plot(x, type = "n", ...)
+  }
   usr <- graphics::par('usr')
   psize<-grDevices::dev.size('px')
   pict<-c(graphics::grconvertX(usr[1:2],"user", "ndc")*psize[1], graphics::grconvertY(usr[3:4], "user", "ndc") * psize[2])
@@ -38,5 +42,5 @@ rasterPoints<-function(x, col="black", cex=1, interpolate = F, ncores = 0) {
                         xleft=usr[1],
                         xright=usr[2],
                         ybottom=usr[3],
-                        ytop=usr[4], interpolate = interpolate)
+                        ytop=usr[4], interpolate = interpolate, ...)
 }
