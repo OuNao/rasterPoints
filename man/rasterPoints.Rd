@@ -5,7 +5,15 @@
 \alias{rasterPoints}
 \title{Plot scatter points using rasterImage.}
 \usage{
-rasterPoints(x, col = "black", cex = 1, interpolate = F, ncores = 0, ...)
+rasterPoints(
+  x,
+  col = "black",
+  cex = 1,
+  interpolate = F,
+  ncores = 0,
+  colorder = "default",
+  ...
+)
 }
 \arguments{
 \item{x}{Matrix of data to plot. Must have 2 columns.}
@@ -17,6 +25,8 @@ rasterPoints(x, col = "black", cex = 1, interpolate = F, ncores = 0, ...)
 \item{interpolate}{Logical. Passed to rasterImage.}
 
 \item{ncores}{Integer. Number of cores used (OpenMP). Defaul = 0 (max avaiable cores).}
+
+\item{colorder}{Character vector with the color priority order. Colors with higher colorder index has priority over the others. The "default" behavior is set the point color only the first time and ignore any new attempt to set the point color.}
 
 \item{...}{Graphic parameters passed to rasterImage/plot (see par()).}
 }

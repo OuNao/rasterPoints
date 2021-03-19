@@ -4,12 +4,14 @@
 \alias{data2raster}
 \title{data2raster}
 \usage{
-data2raster(x, col, usr, width, height, cex = 1L, ncores = 0L)
+data2raster(x, col, colorder, usr, width, height, cex = 1L, ncores = 0L)
 }
 \arguments{
 \item{x}{Data matrix (ncol = 2).}
 
 \item{col}{An character vector with color codes with length = nrow(x).}
+
+\item{colorder}{Named numeric vector color priority..}
 
 \item{usr}{An double vector. See par("usr").}
 

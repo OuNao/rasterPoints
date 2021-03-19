@@ -12,7 +12,8 @@
 #' @param height An integer.
 #' @param cex An integer.
 #' @param ncores Number of cores to use. Default to 0 (use max OpenMP avaiable cores).
-data2raster <- function(x, col, usr, width, height, cex = 1L, ncores = 0L) {
-    .Call('_rasterPoints_data2raster', PACKAGE = 'rasterPoints', x, col, usr, width, height, cex, ncores)
+#' @param colorder Named numeric vector color priority..
+data2raster <- function(x, col, colorder, usr, width, height, cex = 1L, ncores = 0L) {
+    .Call('_rasterPoints_data2raster', PACKAGE = 'rasterPoints', x, col, colorder, usr, width, height, cex, ncores)
 }
 

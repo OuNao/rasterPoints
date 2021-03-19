@@ -6,25 +6,26 @@
 using namespace Rcpp;
 
 // data2raster
-CharacterMatrix data2raster(NumericMatrix x, CharacterVector col, NumericVector usr, int width, int height, int cex, int ncores);
-RcppExport SEXP _rasterPoints_data2raster(SEXP xSEXP, SEXP colSEXP, SEXP usrSEXP, SEXP widthSEXP, SEXP heightSEXP, SEXP cexSEXP, SEXP ncoresSEXP) {
+CharacterMatrix data2raster(NumericMatrix x, CharacterVector col, NumericVector colorder, NumericVector usr, int width, int height, int cex, int ncores);
+RcppExport SEXP _rasterPoints_data2raster(SEXP xSEXP, SEXP colSEXP, SEXP colorderSEXP, SEXP usrSEXP, SEXP widthSEXP, SEXP heightSEXP, SEXP cexSEXP, SEXP ncoresSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< NumericMatrix >::type x(xSEXP);
     Rcpp::traits::input_parameter< CharacterVector >::type col(colSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type colorder(colorderSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type usr(usrSEXP);
     Rcpp::traits::input_parameter< int >::type width(widthSEXP);
     Rcpp::traits::input_parameter< int >::type height(heightSEXP);
     Rcpp::traits::input_parameter< int >::type cex(cexSEXP);
     Rcpp::traits::input_parameter< int >::type ncores(ncoresSEXP);
-    rcpp_result_gen = Rcpp::wrap(data2raster(x, col, usr, width, height, cex, ncores));
+    rcpp_result_gen = Rcpp::wrap(data2raster(x, col, colorder, usr, width, height, cex, ncores));
     return rcpp_result_gen;
 END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_rasterPoints_data2raster", (DL_FUNC) &_rasterPoints_data2raster, 7},
+    {"_rasterPoints_data2raster", (DL_FUNC) &_rasterPoints_data2raster, 8},
     {NULL, NULL, 0}
 };
 
