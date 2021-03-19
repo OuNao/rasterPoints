@@ -6,6 +6,7 @@
 #' @param cex Integer. See par("cex").
 #' @param interpolate Logical. Passed to rasterImage.
 #' @param ncores Integer. Number of cores used (OpenMP). Defaul = 0 (max avaiable cores).
+#' @param colorder Character vector with the color priority order. Colors with higher colorder index has priority over the others. The "default" behavior is set the point color only the first time and ignore any new attempt to set the point color.
 #' @param ... Graphic parameters passed to rasterImage/plot (see par()).
 #' @return Nothing.
 #' @keywords raster, scatter, plot, points.
@@ -20,15 +21,19 @@
 #'   rasterPoints(data, cex=1, col = "blue")
 #' })
 #' @export
-rasterPoints<-function(x, col="black", cex=1, interpolate = F, ncores = 0, ...) {
+rasterPoints<-function(x, col="black", cex=1, interpolate = F, ncores = 0, colorder = "default", ...) {
   if (!is.matrix(x) || ncol(x)!=2 || nrow(x)<1) stop("x must be a matrix with 2 columns and >0 rows!", call. = F)
   if (!is.vector(col) || !is.character(col) || (length(col)!=1 && length(col) != nrow(x))) stop("col mus be a character vector of lenght 1 or nrow(x)", call. = F)
   if (!is.vector(cex) || !is.numeric(cex) || cex!=as.integer(cex) || length(cex)!=1) stop("cex must be a integer (integer vector of lenght = 1).", call. = F)
   if (!is.vector(interpolate) || !is.logical(interpolate) || length(interpolate)!=1) stop("interpolate must be a logical (TRUE or FALSE)", call. = F)
   if (!is.vector(ncores) || !is.numeric(ncores) || ncores!=as.integer(ncores) || length(ncores)!=1) stop("ncores must be a integer (integer vector of lenght = 1).", call. = F)
   if (length(col)==1) col=do.call(grDevices::rgb, as.list(grDevices::col2rgb(col)/255))
-  if(grDevices::dev.cur() == 1) {
-    graphics::plot(x, type = "n", ...)
+  tryCatch(par(new=TRUE),error=function(e) e, warning=function(w) graphics::plot(x, type = "n", ...))
+  if (colorder[1] == "default") {
+    colorder2<-c("default"=0)
+  } else {
+    colorder2<-seq_along(colorder)
+    names(colorder2)<-colorder
   }
   usr <- graphics::par('usr')
   psize<-grDevices::dev.size('px')
@@ -36,7 +41,7 @@ rasterPoints<-function(x, col="black", cex=1, interpolate = F, ncores = 0, ...) 
   pict<-as.integer(pict)
   usr<-c(graphics::grconvertX(pict[1:2]/psize[1], "ndc","user"), graphics::grconvertY(pict[3:4]/psize[2], "ndc", "user"))
   size<-c(pict[2]-pict[1]+1, pict[4]-pict[3]+1)
-  img<-data2raster(x, col, usr, size[1], size[2], cex, ncores)
+  img<-data2raster(x, col, colorder2, usr, size[1], size[2], cex, ncores)
   rast<-grDevices::as.raster(img)
   graphics::rasterImage(rast, 
                         xleft=usr[1],
