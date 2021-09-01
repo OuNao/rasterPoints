@@ -8,6 +8,6 @@ Maintainer: Sérgio Fortier <sergiofortier@yahoo.com.br>
 Description: R point is slo for big number of points (millions). A faster way is convert the data and color information to raster (using Rcpp) and plot using rasterImage.
 License: GPL (>= 2)
 Imports: Rcpp (>= 1.0.4)
-LinkingTo: Rcpp
+LinkingTo: Rcpp, RcppArmadillo
 RoxygenNote: 7.1.1
 Encoding: UTF-8

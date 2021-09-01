@@ -27,13 +27,26 @@ rasterPoints<-function(x, col="black", cex=1, interpolate = F, ncores = 0, color
   if (!is.vector(cex) || !is.numeric(cex) || cex!=as.integer(cex) || length(cex)!=1) stop("cex must be a integer (integer vector of lenght = 1).", call. = F)
   if (!is.vector(interpolate) || !is.logical(interpolate) || length(interpolate)!=1) stop("interpolate must be a logical (TRUE or FALSE)", call. = F)
   if (!is.vector(ncores) || !is.numeric(ncores) || ncores!=as.integer(ncores) || length(ncores)!=1) stop("ncores must be a integer (integer vector of lenght = 1).", call. = F)
-  if (length(col)==1) col=do.call(grDevices::rgb, as.list(grDevices::col2rgb(col)/255))
   tryCatch(par(new=TRUE),error=function(e) e, warning=function(w) graphics::plot(x, type = "n", ...))
-  if (colorder[1] == "default") {
-    colorder2<-c("default"=0)
+  if (length(col)==1) {
+    col=do.call(grDevices::rgb, as.list(grDevices::col2rgb(col)/255))
+    colc<-col
+    colv<-1
+    colorder3<-0
+  } else if (colorder[1] == "default") {
+    colorder3<-0
+    colc<-unique(col)
+    colorder2<-seq_along(colc)
+    names(colorder2)<-colc
+    colv<-colorder2[col]
   } else {
-    colorder2<-seq_along(colorder)
-    names(colorder2)<-colorder
+    if (all(col %in% colorder)) {
+      colorder2<-seq_along(colorder)
+      names(colorder2)<-colorder
+      colv<-colorder2[col]
+      colorder3<-1
+      colc<-colorder
+    } else stop('col MUST be any element of colorder if colorder != "default"!', call. = F)
   }
   usr <- graphics::par('usr')
   psize<-grDevices::dev.size('px')
@@ -41,7 +54,10 @@ rasterPoints<-function(x, col="black", cex=1, interpolate = F, ncores = 0, color
   pict<-as.integer(pict)
   usr<-c(graphics::grconvertX(pict[1:2]/psize[1], "ndc","user"), graphics::grconvertY(pict[3:4]/psize[2], "ndc", "user"))
   size<-c(pict[2]-pict[1]+1, pict[4]-pict[3]+1)
-  img<-data2raster(x, col, colorder2, usr, size[1], size[2], cex, ncores)
+  img<-data2raster(x, colv, colorder3, usr, size[1], size[2], cex, ncores)
+  img<-apply(img, c(1,2), max)
+  img[img<0]<-NA
+  img<-matrix(colc[img], nrow = nrow(img), ncol = ncol(img))
   rast<-grDevices::as.raster(img)
   graphics::rasterImage(rast, 
                         xleft=usr[1],
