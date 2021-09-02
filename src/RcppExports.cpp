@@ -5,6 +5,11 @@
 
 using namespace Rcpp;
 
+#ifdef RCPP_USE_GLOBAL_ROSTREAM
+Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
+Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
+#endif
+
 // data2raster
 CharacterMatrix data2raster(NumericMatrix x, CharacterVector col, NumericVector colorder, NumericVector usr, int width, int height, int cex, int ncores);
 RcppExport SEXP _rasterPoints_data2raster(SEXP xSEXP, SEXP colSEXP, SEXP colorderSEXP, SEXP usrSEXP, SEXP widthSEXP, SEXP heightSEXP, SEXP cexSEXP, SEXP ncoresSEXP) {
