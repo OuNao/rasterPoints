@@ -31,7 +31,7 @@ rasterPoints<-function(x, col="black", cex=1, interpolate = F, ncores = 0, color
   if (length(col)==1) {
     col=do.call(grDevices::rgb, as.list(grDevices::col2rgb(col)/255))
     colc<-col
-    colv<-1
+    colv<-rep(1, nrow(x))
     colorder3<-0
   } else if (colorder[1] == "default") {
     colorder3<-0

@@ -30,7 +30,7 @@ arma::cube data2raster(NumericMatrix x, IntegerVector colv, int colorder, Numeri
   if (cex & 1) center = 0;
   int nthreads=omp_get_max_threads();
   if ((ncores<=0) || (ncores>nthreads)) ncores=nthreads;
-  if (colorder != 0) ncores=1;
+  // if (colorder != 0) ncores=1;
   arma::cube res(height, width, ncores);
   std::fill(res.begin(), res.end(), NA_INTEGER) ;
 #pragma omp parallel for num_threads(ncores)
