@@ -7,6 +7,7 @@
 #' @param interpolate Logical. Passed to rasterImage.
 #' @param ncores Integer. Number of cores used (OpenMP). Defaul = 0 (max avaiable cores).
 #' @param colorder Character vector with the color priority order. Colors with higher colorder index has priority over the others. The "default" behavior is set the point color only the first time and ignore any new attempt to set the point color.
+#' @param force_new Logical. Force create a new plot.
 #' @param ... Graphic parameters passed to rasterImage/plot (see par()).
 #' @return Nothing.
 #' @keywords raster, scatter, plot, points.

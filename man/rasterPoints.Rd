@@ -12,6 +12,7 @@ rasterPoints(
   interpolate = F,
   ncores = 0,
   colorder = "default",
+  force_new = FALSE,
   ...
 )
 }
@@ -27,6 +28,8 @@ rasterPoints(
 \item{ncores}{Integer. Number of cores used (OpenMP). Defaul = 0 (max avaiable cores).}
 
 \item{colorder}{Character vector with the color priority order. Colors with higher colorder index has priority over the others. The "default" behavior is set the point color only the first time and ignore any new attempt to set the point color.}
+
+\item{force_new}{Logical. Force create a new plot.}
 
 \item{...}{Graphic parameters passed to rasterImage/plot (see par()).}
 }
