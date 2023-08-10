@@ -21,7 +21,7 @@ rasterPoints(
 
 \item{col}{Character vector with lenght = nrow(x) or lenght = 1 (same color for all points).}
 
-\item{cex}{Integer. See par("cex").}
+\item{cex}{Integer vector. See par("cex").}
 
 \item{interpolate}{Logical. Passed to rasterImage.}
 

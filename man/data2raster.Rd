@@ -4,7 +4,7 @@
 \alias{data2raster}
 \title{data2raster}
 \usage{
-data2raster(x, col, colorder, usr, width, height, cex = 1L, ncores = 0L)
+data2raster(x, col, colorder, usr, width, height, cex, ncores = 0L)
 }
 \arguments{
 \item{x}{Data matrix (ncol = 2).}
@@ -19,7 +19,7 @@ data2raster(x, col, colorder, usr, width, height, cex = 1L, ncores = 0L)
 
 \item{height}{An integer.}
 
-\item{cex}{An integer.}
+\item{cex}{An integer vector.}
 
 \item{ncores}{Number of cores to use. Default to 0 (use max OpenMP avaiable cores).}
 }

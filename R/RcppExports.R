@@ -10,10 +10,10 @@
 #' @param usr An double vector. See par("usr").
 #' @param width An integer.
 #' @param height An integer.
-#' @param cex An integer.
+#' @param cex An integer vector.
 #' @param ncores Number of cores to use. Default to 0 (use max OpenMP avaiable cores).
 #' @param colorder Named numeric vector color priority..
-data2raster <- function(x, col, colorder, usr, width, height, cex = 1L, ncores = 0L) {
+data2raster <- function(x, col, colorder, usr, width, height, cex, ncores = 0L) {
     .Call('_rasterPoints_data2raster', PACKAGE = 'rasterPoints', x, col, colorder, usr, width, height, cex, ncores)
 }
 

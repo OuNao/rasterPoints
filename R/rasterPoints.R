@@ -3,7 +3,7 @@
 #' @description Plot scatter points using rasterImage. Open a graphic device if grDevices::dev.cur() == 1 (null device).
 #' @param x Matrix of data to plot. Must have 2 columns.
 #' @param col Character vector with lenght = nrow(x) or lenght = 1 (same color for all points).
-#' @param cex Integer. See par("cex").
+#' @param cex Integer vector. See par("cex").
 #' @param interpolate Logical. Passed to rasterImage.
 #' @param ncores Integer. Number of cores used (OpenMP). Defaul = 0 (max avaiable cores).
 #' @param colorder Character vector with the color priority order. Colors with higher colorder index has priority over the others. The "default" behavior is set the point color only the first time and ignore any new attempt to set the point color.
@@ -25,12 +25,13 @@
 rasterPoints<-function(x, col="black", cex=1, interpolate = F, ncores = 0, colorder = "default", force_new = FALSE, ...) {
   if (!is.matrix(x) || ncol(x)!=2 || nrow(x)<1) stop("x must be a matrix with 2 columns and >0 rows!", call. = F)
   if (!is.vector(col) || !is.character(col) || (length(col)!=1 && length(col) != nrow(x))) stop("col mus be a character vector of lenght 1 or nrow(x)", call. = F)
-  if (!is.vector(cex) || !is.numeric(cex) || cex!=as.integer(cex) || length(cex)!=1) stop("cex must be a integer (integer vector of lenght = 1).", call. = F)
+  if (!is.vector(cex) || !is.numeric(cex) || cex!=as.integer(cex) || length(cex)==0) stop("cex must be a integer vector of lenght >0.", call. = F)
   if (!is.vector(interpolate) || !is.logical(interpolate) || length(interpolate)!=1) stop("interpolate must be a logical (TRUE or FALSE)", call. = F)
   if (!is.vector(ncores) || !is.numeric(ncores) || ncores!=as.integer(ncores) || length(ncores)!=1) stop("ncores must be a integer (integer vector of lenght = 1).", call. = F)
   if (length(col)==1) col=rep(do.call(grDevices::rgb, as.list(grDevices::col2rgb(col)/255)), nrow(x))
+  if (length(cex)==1) cex=rep(cex, nrow(x))
   if (force_new) graphics::plot(x, type = "n", ...)
-  tryCatch(par(new=TRUE),error=function(e) e, warning=function(w) graphics::plot(x, type = "n", ...))
+  tryCatch(graphics::par(new=TRUE),error=function(e) e, warning=function(w) graphics::plot(x, type = "n", ...))
   if (colorder[1] == "default") {
     colorder2<-c("default"=0)
   } else {
