@@ -4,22 +4,22 @@
 \alias{data2raster}
 \title{data2raster}
 \usage{
-data2raster(x, col, colorder, usr, width, height, cex, ncores = 0L)
+data2raster(x, col_idx, colorder, usr, width, height, cex, ncores = 0L)
 }
 \arguments{
 \item{x}{Data matrix (ncol = 2).}
 
-\item{col}{An character vector with color codes with length = nrow(x).}
+\item{col_idx}{Integer vector with color indices (1-based from R). With length = nrow(x).}
 
-\item{colorder}{Named numeric vector color priority..}
+\item{colorder}{Numeric vector where index is color_id and value is priority.}
 
 \item{usr}{An double vector. See par("usr").}
 
-\item{width}{An integer.}
+\item{width}{Output raster width.}
 
-\item{height}{An integer.}
+\item{height}{Output raster height.}
 
-\item{cex}{An integer vector.}
+\item{cex}{Point size vector.}
 
 \item{ncores}{Number of cores to use. Default to 0 (use max OpenMP avaiable cores).}
 }

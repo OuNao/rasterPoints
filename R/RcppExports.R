@@ -6,14 +6,14 @@
 #' This function convert a 2 column matrix of data in a img matrix.
 #'
 #' @param x Data matrix (ncol = 2).
-#' @param col An character vector with color codes with length = nrow(x).
+#' @param col_idx Integer vector with color indices (1-based from R). With length = nrow(x).
+#' @param colorder Numeric vector where index is color_id and value is priority.
 #' @param usr An double vector. See par("usr").
-#' @param width An integer.
-#' @param height An integer.
-#' @param cex An integer vector.
+#' @param width Output raster width.
+#' @param height Output raster height.
+#' @param cex Point size vector.
 #' @param ncores Number of cores to use. Default to 0 (use max OpenMP avaiable cores).
-#' @param colorder Named numeric vector color priority..
-data2raster <- function(x, col, colorder, usr, width, height, cex, ncores = 0L) {
-    .Call('_rasterPoints_data2raster', PACKAGE = 'rasterPoints', x, col, colorder, usr, width, height, cex, ncores)
+data2raster <- function(x, col_idx, colorder, usr, width, height, cex, ncores = 0L) {
+    .Call('_rasterPoints_data2raster', PACKAGE = 'rasterPoints', x, col_idx, colorder, usr, width, height, cex, ncores)
 }
 

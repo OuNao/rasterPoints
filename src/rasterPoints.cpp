@@ -1,6 +1,5 @@
 #include <Rcpp.h>
 #include <omp.h>
-#include <math.h>
 
 using namespace Rcpp;
 
@@ -9,45 +8,77 @@ using namespace Rcpp;
 //' This function convert a 2 column matrix of data in a img matrix.
 //'
 //' @param x Data matrix (ncol = 2).
-//' @param col An character vector with color codes with length = nrow(x).
+//' @param col_idx Integer vector with color indices (1-based from R). With length = nrow(x).
+//' @param colorder Numeric vector where index is color_id and value is priority.
 //' @param usr An double vector. See par("usr").
-//' @param width An integer.
-//' @param height An integer.
-//' @param cex An integer vector.
+//' @param width Output raster width.
+//' @param height Output raster height.
+//' @param cex Point size vector.
 //' @param ncores Number of cores to use. Default to 0 (use max OpenMP avaiable cores).
-//' @param colorder Named numeric vector color priority..
 // [[Rcpp::export]]
-CharacterMatrix data2raster(const NumericMatrix& x, const CharacterVector& col, const IntegerVector colorder, NumericVector usr, int width, int height, const IntegerVector cex, int ncores=0) {
-  IntegerMatrix data(x.nrow(), x.ncol());
-  data(_,0)=((x(_,0)-usr[0])/(usr[1]-usr[0]))*(width-1);
-  data(_,1)=((x(_,1)-usr[2])/(usr[3]-usr[2]))*(height-1);
-  int n=data.nrow();
-  CharacterMatrix res(height, width);
-  std::fill(res.begin(), res.end(), NA_STRING) ;
-  int nthreads=omp_get_max_threads();
-  if ((ncores<=0) || (ncores>nthreads)) ncores=nthreads;
+IntegerMatrix data2raster(const NumericMatrix& x, 
+                              const IntegerVector& col_idx, 
+                              const IntegerVector& colorder, 
+                              NumericVector usr, 
+                              int width, int height, 
+                              const IntegerVector cex, 
+                              int ncores = 0) {
+  
+  int n = x.nrow();
+  IntegerMatrix res(height, width); 
+  IntegerMatrix p_map(height, width); 
+  
+  // Initialize matrices: 0 for empty color, -1 for lowest priority
+  std::fill(res.begin(), res.end(), 0);
+  std::fill(p_map.begin(), p_map.end(), -1);
+
+  int nthreads = omp_get_max_threads();
+  if (ncores <= 0 || ncores > nthreads) ncores = nthreads;
+
+  // Pre-calculate scales to move divisions out of the 5M loop
+  double x_range = usr[1] - usr[0];
+  double y_range = usr[3] - usr[2];
+  double scale_x = (width - 1) / x_range;
+  double scale_y = (height - 1) / y_range;
+  
 #pragma omp parallel for num_threads(ncores)
   for (int i = 0; i < n; i++) {
-    int r=(height-2)-data(i,1);
-    int c=data(i,0)-1;
-    int cexp = (int)cex(i);
-    float center = 0.5;
-    if (cexp & 1) center = 0;
-    int minidx = -(int)(((float)(cexp)-0.5)/2);
-    int maxidx = (int)(cexp/2);
+    int px = (int)((x(i, 0) - usr[0]) * scale_x);
+    int py = (int)((x(i, 1) - usr[2]) * scale_y);
+    
+    int r = (height - 2) - py;
+    int c = px - 1;
+    
+    int cexp = cex[i];
+    float radius_sq = pow((float)cexp / 2.0 + 0.5, 2);
+    float center = (cexp & 1) ? 0.0 : 0.5;
+    
+    int minidx = -(int)(((float)cexp - 0.5) / 2.0);
+    int maxidx = (int)(cexp / 2);
+    
+    int current_cor = col_idx[i];
+    int current_prio = colorder[current_cor - 1]; // Maps color ID to its priority
+    
     for (int j = minidx; j <= maxidx; j++) {
       for (int k = minidx; k <= maxidx; k++) {
-        int r2 = r+j;
-        int c2 = c+k;
-        if ((r2<0) | (c2<0) | (r2>=height) | (c2>=width)) continue;
-        float distj = fabsf((float)j-center) + 0.5;
-        float distk = fabsf((float)k-center) + 0.5;
-        if (sqrt(pow(distj,2) + pow(distk,2)) > ((float)(cexp)/2)+0.5) continue;
-        if (colorder(0) == 0 && res(r2, c2) != NA_STRING) continue;
-        if (colorder(0) != 0 && res(r2, c2) != NA_STRING && (int)colorder[(char*)res(r2, c2)] >= (int)colorder[(char*)col(i)]) continue;
-        res(r2, c2)=(char*)col(i);
+        int r2 = r + j;
+        int c2 = c + k;
+        
+        if (r2 < 0 || c2 < 0 || r2 >= height || c2 >= width) continue;
+        
+        // Distance check using squared values (O(1) vs O(N) of sqrt)
+        float dist_sq = pow(fabsf((float)j - center) + 0.5, 2) + pow(fabsf((float)k - center) + 0.5, 2);
+        
+        if (dist_sq > radius_sq) continue;
+        
+        // Priority logic: only overwrite if current point has higher or equal priority.
+        // Using integers makes this comparison extremely fast and safer for concurrent writes.
+        if (current_prio >= p_map(r2, c2)) {
+          p_map(r2, c2) = current_prio;
+          res(r2, c2) = current_cor;
+        }
       }
     }
   }
-  return(res);
+  return res;
 }

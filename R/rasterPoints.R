@@ -32,11 +32,16 @@ rasterPoints<-function(x, col="black", cex=1, interpolate = F, ncores = 0, color
   if (length(cex)==1) cex=rep(cex, nrow(x))
   if (force_new) graphics::plot(x, type = "n", ...)
   tryCatch(graphics::par(new=TRUE),error=function(e) e, warning=function(w) graphics::plot(x, type = "n", ...))
+  col_factor <- factor(col)
+  col_idx <- as.integer(col_factor)
+  unique_colors <- levels(col_factor)
   if (colorder[1] == "default") {
-    colorder2<-c("default"=0)
+    colorder_vec <- rep(0L, length(unique_colors))
   } else {
-    colorder2<-seq_along(colorder)
-    names(colorder2)<-colorder
+    colorder_vec <- rep(0L, length(unique_colors))
+    m <- match(colorder, unique_colors)
+    valid_m <- !is.na(m)
+    colorder_vec[m[valid_m]] <- seq_along(colorder)[valid_m]
   }
   usr <- graphics::par('usr')
   psize<-grDevices::dev.size('px')
@@ -44,7 +49,9 @@ rasterPoints<-function(x, col="black", cex=1, interpolate = F, ncores = 0, color
   pict<-as.integer(pict)
   usr<-c(graphics::grconvertX(pict[1:2]/psize[1], "ndc","user"), graphics::grconvertY(pict[3:4]/psize[2], "ndc", "user"))
   size<-c(pict[2]-pict[1]+1, pict[4]-pict[3]+1)
-  img<-data2raster(x, col, colorder2, usr, size[1], size[2], cex, ncores)
+  img_idx <- data2raster(x, col_idx, colorder_vec, usr, size[1], size[2], cex, ncores)
+  img_idx[img_idx == 0] <- NA
+  img <- matrix(unique_colors[img_idx], nrow = nrow(img_idx))
   rast<-grDevices::as.raster(img)
   graphics::rasterImage(rast, 
                         xleft=usr[1],
