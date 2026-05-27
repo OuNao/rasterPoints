@@ -17,3 +17,19 @@ data2raster <- function(x, col_idx, colorder, usr, width, height, cex, ncores = 
     .Call('_rasterPoints_data2raster', PACKAGE = 'rasterPoints', x, col_idx, colorder, usr, width, height, cex, ncores)
 }
 
+#' data2raster_density
+#'
+#' High-performance density aggregation for large scale flow cytometry data.
+#' This function uses a binning approach (Datashader-style) instead of KDE
+#' to achieve near-instant rendering of millions of events.
+#'
+#' @param x NumericMatrix with 2 columns (fluorescence channels).
+#' @param usr NumericVector with plot limits c(x1, x2, y1, y2).
+#' @param width Integer, output image width in pixels.
+#' @param height Integer, output image height in pixels.
+#' @param n_bins Integer, number of color steps (e.g., 256).
+#' @param ncores Integer, number of OpenMP threads.
+data2raster_density <- function(x, usr, width, height, n_bins = 256L, ncores = 0L) {
+    .Call('_rasterPoints_data2raster_density', PACKAGE = 'rasterPoints', x, usr, width, height, n_bins, ncores)
+}
+

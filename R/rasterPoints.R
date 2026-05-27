@@ -22,7 +22,7 @@
 #'   rasterPoints(data, cex=1, col = "blue")
 #' })
 #' @export
-rasterPoints<-function(x, col="black", cex=1, interpolate = F, ncores = 0, colorder = "default", force_new = FALSE, ...) {
+rasterPoints<-function(x, col="black", cex=1, interpolate = F, ncores = 0, colorder = "default", force_new = FALSE, colramp = NULL, ...) {
   if (!is.matrix(x) || ncol(x)!=2 || nrow(x)<1) stop("x must be a matrix with 2 columns and >0 rows!", call. = F)
   if (!is.vector(col) || !is.character(col) || (length(col)!=1 && length(col) != nrow(x))) stop("col mus be a character vector of lenght 1 or nrow(x)", call. = F)
   if (!is.vector(cex) || !is.numeric(cex) || cex!=as.integer(cex) || length(cex)==0) stop("cex must be a integer vector of lenght >0.", call. = F)
@@ -37,6 +37,11 @@ rasterPoints<-function(x, col="black", cex=1, interpolate = F, ncores = 0, color
   unique_colors <- levels(col_factor)
   if (colorder[1] == "default") {
     colorder_vec <- rep(0L, length(unique_colors))
+  } else if (colorder[1] == "density") {
+    if (is.null(colramp) || !is.function(colramp)) {
+      colramp<-grDevices::colorRampPalette(c("blue", "turquoise", "green", "yellow", "orange", "red"))
+    }
+    unique_colors <- colramp(256)
   } else {
     colorder_vec <- rep(0L, length(unique_colors))
     m <- match(colorder, unique_colors)
@@ -49,9 +54,14 @@ rasterPoints<-function(x, col="black", cex=1, interpolate = F, ncores = 0, color
   pict<-as.integer(pict)
   usr<-c(graphics::grconvertX(pict[1:2]/psize[1], "ndc","user"), graphics::grconvertY(pict[3:4]/psize[2], "ndc", "user"))
   size<-c(pict[2]-pict[1]+1, pict[4]-pict[3]+1)
-  img_idx <- data2raster(x, col_idx, colorder_vec, usr, size[1], size[2], cex, ncores)
+  if (colorder[1] == "density") {
+    img_idx <- data2raster_density(x, usr, size[1], size[2], 256, ncores)
+  } else {
+    img_idx <- data2raster(x, col_idx, colorder_vec, usr, size[1], size[2], cex, ncores)
+  }
   img_idx[img_idx == 0] <- NA
   img <- matrix(unique_colors[img_idx], nrow = nrow(img_idx))
+  
   rast<-grDevices::as.raster(img)
   graphics::rasterImage(rast, 
                         xleft=usr[1],

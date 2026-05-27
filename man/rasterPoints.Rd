@@ -13,6 +13,7 @@ rasterPoints(
   ncores = 0,
   colorder = "default",
   force_new = FALSE,
+  colramp = NULL,
   ...
 )
 }

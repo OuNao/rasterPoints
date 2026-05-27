@@ -28,9 +28,26 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// data2raster_density
+IntegerMatrix data2raster_density(const NumericMatrix& x, NumericVector usr, int width, int height, int n_bins, int ncores);
+RcppExport SEXP _rasterPoints_data2raster_density(SEXP xSEXP, SEXP usrSEXP, SEXP widthSEXP, SEXP heightSEXP, SEXP n_binsSEXP, SEXP ncoresSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const NumericMatrix& >::type x(xSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type usr(usrSEXP);
+    Rcpp::traits::input_parameter< int >::type width(widthSEXP);
+    Rcpp::traits::input_parameter< int >::type height(heightSEXP);
+    Rcpp::traits::input_parameter< int >::type n_bins(n_binsSEXP);
+    Rcpp::traits::input_parameter< int >::type ncores(ncoresSEXP);
+    rcpp_result_gen = Rcpp::wrap(data2raster_density(x, usr, width, height, n_bins, ncores));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_rasterPoints_data2raster", (DL_FUNC) &_rasterPoints_data2raster, 8},
+    {"_rasterPoints_data2raster_density", (DL_FUNC) &_rasterPoints_data2raster_density, 6},
     {NULL, NULL, 0}
 };
 
