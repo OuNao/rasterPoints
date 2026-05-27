@@ -25,7 +25,7 @@
 rasterPoints<-function(x, col="black", cex=1, interpolate = F, ncores = 0, colorder = "default", force_new = FALSE, colramp = NULL, ...) {
   if (!is.matrix(x) || ncol(x)!=2 || nrow(x)<1) stop("x must be a matrix with 2 columns and >0 rows!", call. = F)
   if (!is.vector(col) || !is.character(col) || (length(col)!=1 && length(col) != nrow(x))) stop("col mus be a character vector of lenght 1 or nrow(x)", call. = F)
-  if (!is.vector(cex) || !is.numeric(cex) || cex!=as.integer(cex) || length(cex)==0) stop("cex must be a integer vector of lenght >0.", call. = F)
+  if (!is.vector(cex) || !is.numeric(cex) || any(cex!=as.integer(cex)) || length(cex)==0) stop("cex must be a integer vector of lenght >0.", call. = F)
   if (!is.vector(interpolate) || !is.logical(interpolate) || length(interpolate)!=1) stop("interpolate must be a logical (TRUE or FALSE)", call. = F)
   if (!is.vector(ncores) || !is.numeric(ncores) || ncores!=as.integer(ncores) || length(ncores)!=1) stop("ncores must be a integer (integer vector of lenght = 1).", call. = F)
   if (length(col)==1) col=rep(do.call(grDevices::rgb, as.list(grDevices::col2rgb(col)/255)), nrow(x))
