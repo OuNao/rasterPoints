@@ -28,7 +28,10 @@ rasterPoints<-function(x, col="black", cex=1, interpolate = F, ncores = 0, color
   if (!is.vector(cex) || !is.numeric(cex) || any(cex!=as.integer(cex)) || length(cex)==0) stop("cex must be a integer vector of lenght >0.", call. = F)
   if (!is.vector(interpolate) || !is.logical(interpolate) || length(interpolate)!=1) stop("interpolate must be a logical (TRUE or FALSE)", call. = F)
   if (!is.vector(ncores) || !is.numeric(ncores) || ncores!=as.integer(ncores) || length(ncores)!=1) stop("ncores must be a integer (integer vector of lenght = 1).", call. = F)
-  if (length(col)==1) col=rep(do.call(grDevices::rgb, as.list(grDevices::col2rgb(col)/255)), nrow(x))
+  if (length(col)==1) {
+    col_rgba <- grDevices::col2rgb(col, alpha = TRUE)
+    col <- rep(grDevices::rgb(col_rgba[1,]/255, col_rgba[2,]/255, col_rgba[3,]/255, col_rgba[4,]/255), nrow(x))
+  }
   if (length(cex)==1) cex=rep(cex, nrow(x))
   if (force_new) graphics::plot(x, type = "n", ...)
   tryCatch(graphics::par(new=TRUE),error=function(e) e, warning=function(w) graphics::plot(x, type = "n", ...))
@@ -39,7 +42,7 @@ rasterPoints<-function(x, col="black", cex=1, interpolate = F, ncores = 0, color
     colorder_vec <- rep(0L, length(unique_colors))
   } else if (colorder[1] == "density") {
     if (is.null(colramp) || !is.function(colramp)) {
-      colramp<-grDevices::colorRampPalette(c("blue", "turquoise", "green", "yellow", "orange", "red"))
+      colramp<-grDevices::colorRampPalette(c("blue", "turquoise", "green", "yellow", "orange", "red"), alpha = TRUE)
     }
     unique_colors <- colramp(256)
   } else {
@@ -59,8 +62,8 @@ rasterPoints<-function(x, col="black", cex=1, interpolate = F, ncores = 0, color
   } else {
     img_idx <- data2raster(x, col_idx, colorder_vec, usr, size[1], size[2], cex, ncores)
   }
-  img_idx[img_idx == 0] <- NA
-  img <- matrix(unique_colors[img_idx], nrow = nrow(img_idx))
+  mapping_colors <- c("#00000000", unique_colors)
+  img <- matrix(mapping_colors[img_idx + 1L], nrow = nrow(img_idx))
   
   rast<-grDevices::as.raster(img)
   graphics::rasterImage(rast, 
