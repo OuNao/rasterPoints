@@ -29,8 +29,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // data2raster_density
-IntegerMatrix data2raster_density(const NumericMatrix& x, NumericVector usr, int width, int height, int n_bins, int ncores);
-RcppExport SEXP _rasterPoints_data2raster_density(SEXP xSEXP, SEXP usrSEXP, SEXP widthSEXP, SEXP heightSEXP, SEXP n_binsSEXP, SEXP ncoresSEXP) {
+IntegerMatrix data2raster_density(const NumericMatrix& x, NumericVector usr, int width, int height, int n_bins, bool smooth, int smooth_radius, double smooth_sigma, double margin_pct, double cex, int ncores);
+RcppExport SEXP _rasterPoints_data2raster_density(SEXP xSEXP, SEXP usrSEXP, SEXP widthSEXP, SEXP heightSEXP, SEXP n_binsSEXP, SEXP smoothSEXP, SEXP smooth_radiusSEXP, SEXP smooth_sigmaSEXP, SEXP margin_pctSEXP, SEXP cexSEXP, SEXP ncoresSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -39,15 +39,20 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< int >::type width(widthSEXP);
     Rcpp::traits::input_parameter< int >::type height(heightSEXP);
     Rcpp::traits::input_parameter< int >::type n_bins(n_binsSEXP);
+    Rcpp::traits::input_parameter< bool >::type smooth(smoothSEXP);
+    Rcpp::traits::input_parameter< int >::type smooth_radius(smooth_radiusSEXP);
+    Rcpp::traits::input_parameter< double >::type smooth_sigma(smooth_sigmaSEXP);
+    Rcpp::traits::input_parameter< double >::type margin_pct(margin_pctSEXP);
+    Rcpp::traits::input_parameter< double >::type cex(cexSEXP);
     Rcpp::traits::input_parameter< int >::type ncores(ncoresSEXP);
-    rcpp_result_gen = Rcpp::wrap(data2raster_density(x, usr, width, height, n_bins, ncores));
+    rcpp_result_gen = Rcpp::wrap(data2raster_density(x, usr, width, height, n_bins, smooth, smooth_radius, smooth_sigma, margin_pct, cex, ncores));
     return rcpp_result_gen;
 END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
     {"_rasterPoints_data2raster", (DL_FUNC) &_rasterPoints_data2raster, 8},
-    {"_rasterPoints_data2raster_density", (DL_FUNC) &_rasterPoints_data2raster_density, 6},
+    {"_rasterPoints_data2raster_density", (DL_FUNC) &_rasterPoints_data2raster_density, 11},
     {NULL, NULL, 0}
 };
 

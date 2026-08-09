@@ -4,7 +4,19 @@
 \alias{data2raster_density}
 \title{data2raster_density}
 \usage{
-data2raster_density(x, usr, width, height, n_bins = 256L, ncores = 0L)
+data2raster_density(
+  x,
+  usr,
+  width,
+  height,
+  n_bins = 256L,
+  smooth = FALSE,
+  smooth_radius = 4L,
+  smooth_sigma = 2,
+  margin_pct = 0.05,
+  cex = 1,
+  ncores = 0L
+)
 }
 \arguments{
 \item{x}{NumericMatrix with 2 columns (fluorescence channels).}
@@ -16,6 +28,16 @@ data2raster_density(x, usr, width, height, n_bins = 256L, ncores = 0L)
 \item{height}{Integer, output image height in pixels.}
 
 \item{n_bins}{Integer, number of color steps (e.g., 256).}
+
+\item{smooth}{Logical, Apply Gaussian neighborhood kernel smoothing in density mode?}
+
+\item{smooth_radius}{Integer, Kernel neighborhood radius in pixels. Default is 4L.}
+
+\item{smooth_sigma}{Double, Gaussian standard deviation. Default is 2.0.}
+
+\item{margin_pct}{Double, interior bounding box margin ratio (0.05). Prevents axis saturation artifacts.}
+
+\item{cex}{Double, point size scaling parameter.}
 
 \item{ncores}{Integer, number of OpenMP threads.}
 }

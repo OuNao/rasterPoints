@@ -1,5 +1,6 @@
 #include <Rcpp.h>
 #include <omp.h>
+#include <cmath>
 
 using namespace Rcpp;
 
@@ -83,12 +84,6 @@ IntegerMatrix data2raster(const NumericMatrix& x,
   return res;
 }
 
-#include <Rcpp.h>
-#include <omp.h>
-#include <math.h>
-
-using namespace Rcpp;
-
 //' data2raster_density
 //'
 //' High-performance density aggregation for large scale flow cytometry data.
@@ -99,6 +94,11 @@ using namespace Rcpp;
 //' @param usr NumericVector with plot limits c(x1, x2, y1, y2).
 //' @param width Integer, output image width in pixels.
 //' @param height Integer, output image height in pixels.
+//' @param smooth Logical, Apply Gaussian neighborhood kernel smoothing in density mode?
+//' @param smooth_radius Integer, Kernel neighborhood radius in pixels. Default is 4L.
+//' @param smooth_sigma Double, Gaussian standard deviation. Default is 2.0.
+//' @param margin_pct Double, interior bounding box margin ratio (0.05). Prevents axis saturation artifacts.
+//' @param cex Double, point size scaling parameter.
 //' @param n_bins Integer, number of color steps (e.g., 256).
 //' @param ncores Integer, number of OpenMP threads.
 // [[Rcpp::export]]
@@ -106,71 +106,156 @@ IntegerMatrix data2raster_density(const NumericMatrix& x,
                                   NumericVector usr, 
                                   int width, int height, 
                                   int n_bins = 256,
+                                  bool smooth = false,
+                                  int smooth_radius = 4,
+                                  double smooth_sigma = 2.0,
+                                  double margin_pct = 0.05,
+                                  double cex = 1.0,
                                   int ncores = 0) {
-  
   int n = x.nrow();
+  std::vector<int> raw_counts(width * height, 0);
   
-  // Internal buffer to store the hit count per pixel (density map)
-  IntegerMatrix dens_map(height, width);
-  std::fill(dens_map.begin(), dens_map.end(), 0);
+  double scale_x = (double)width / (usr[1] - usr[0]);
+  double scale_y = (double)height / (usr[3] - usr[2]);
   
-  // Pre-calculate projection scales to move divisions out of the 5M loop
-  double x_range = usr[1] - usr[0];
-  double y_range = usr[3] - usr[2];
-  double scale_x = (width - 1) / x_range;
-  double scale_y = (height - 1) / y_range;
-  
-  int nthreads = omp_get_max_threads();
-  if (ncores <= 0 || ncores > nthreads) ncores = nthreads;
-  
-  // LOOP 1: Aggregation (Binning)
-  // We process 5M points and increment the count at the corresponding pixel.
-  // Using #pragma omp atomic for thread-safe increments on the shared matrix.
+  // ---------------------------------------------------------------------------
+  // STEP 1: 2D Binning / Raw Point Aggregation (Exact 1-pixel mapping)
+  // ---------------------------------------------------------------------------
 #pragma omp parallel for num_threads(ncores)
   for (int i = 0; i < n; i++) {
     int px = (int)((x(i, 0) - usr[0]) * scale_x);
     int py = (int)((x(i, 1) - usr[2]) * scale_y);
     
-    // Invert Y axis to match R's raster coordinate system (top-down)
     int r = (height - 1) - py;
     int c = px;
     
-    // Bounds check before writing to memory
     if (r >= 0 && c >= 0 && r < height && c < width) {
 #pragma omp atomic
-      dens_map(r, c)++;
+      raw_counts[r * width + c]++;
     }
   }
   
-  // Find the global maximum density to normalize colors
-  int max_d = 0;
-  for (int i = 0; i < dens_map.length(); i++) {
-    if (dens_map[i] > max_d) max_d = dens_map[i];
-  }
+  // ---------------------------------------------------------------------------
+  // STEP 2: Optional Gaussian Neighborhood Density Smoothing
+  // ---------------------------------------------------------------------------
+  std::vector<double> neighborhood_density(width * height, 0.0);
   
-  // Final raster matrix containing color indices
-  IntegerMatrix res(height, width);
-  if (max_d == 0) return res;
-  
-  // LOOP 2: Normalization and Colormap mapping
-  // We only iterate over the screen pixels (e.g., 800x600), making this very fast.
+  if (!smooth) {
+    for (size_t i = 0; i < raw_counts.size(); i++) {
+      neighborhood_density[i] = (double)raw_counts[i];
+    }
+  } else {
+    std::vector<double> kernel;
+    int k_size = 2 * smooth_radius + 1;
+    kernel.reserve(k_size * k_size);
+    double two_sigma2 = 2.0 * smooth_sigma * smooth_sigma;
+    
+    for (int dr = -smooth_radius; dr <= smooth_radius; dr++) {
+      for (int dc = -smooth_radius; dc <= smooth_radius; dc++) {
+        double dist2 = (double)(dr * dr + dc * dc);
+        kernel.push_back(std::exp(-dist2 / two_sigma2));
+      }
+    }
+    
 #pragma omp parallel for num_threads(ncores)
-  for (int r = 0; r < height; r++) {
-    for (int c = 0; c < width; c++) {
-      int count = dens_map(r, c);
-      if (count > 0) {
-        // Log-normalization: Essential for flow cytometry to visualize 
-        // low-density populations alongside high-density cores.
-        double norm = log1p(count) / log1p(max_d);
+    for (int r = 0; r < height; r++) {
+      for (int c = 0; c < width; c++) {
+        if (raw_counts[r * width + c] == 0) continue;
         
-        // Map to 1-based index for R palette accessibility
-        res(r, c) = (int)(norm * (n_bins - 1)) + 1;
-      } else {
-        // Zero represents transparency (NA) in the R wrapper
-        res(r, c) = 0;
+        double sum_density = 0.0;
+        int k_idx = 0;
+        for (int dr = -smooth_radius; dr <= smooth_radius; dr++) {
+          int nr = r + dr;
+          if (nr < 0 || nr >= height) {
+            k_idx += k_size;
+            continue;
+          }
+          for (int dc = -smooth_radius; dc <= smooth_radius; dc++) {
+            int nc = c + dc;
+            if (nc >= 0 && nc < width) {
+              sum_density += raw_counts[nr * width + nc] * kernel[k_idx];
+            }
+            k_idx++;
+          }
+        }
+        neighborhood_density[r * width + c] = sum_density;
       }
     }
   }
   
+  // ---------------------------------------------------------------------------
+  // STEP 3: Robust Maximum Search & Linear Mapping with Centered Circle Dilators
+  // ---------------------------------------------------------------------------
+  int margin_x = (int)(width * margin_pct);
+  int margin_y = (int)(height * margin_pct);
+  
+  if (margin_x >= width / 2) margin_x = 0;
+  if (margin_y >= height / 2) margin_y = 0;
+  
+  double max_d = 0.0;
+  
+  for (int r = margin_y; r < height - margin_y; r++) {
+    for (int c = margin_x; c < width - margin_x; c++) {
+      double d = neighborhood_density[r * width + c];
+      if (d > max_d) max_d = d;
+    }
+  }
+  
+  if (max_d == 0.0) {
+    for (size_t i = 0; i < neighborhood_density.size(); i++) {
+      if (neighborhood_density[i] > max_d) max_d = neighborhood_density[i];
+    }
+  }
+  
+  IntegerMatrix res(height, width);
+  if (max_d == 0.0) return res;
+  
+  int cex_int = (int)std::round(cex);
+  if (cex_int < 1) cex_int = 1;
+  
+#pragma omp parallel for num_threads(ncores)
+  for (int r = 0; r < height; r++) {
+    for (int c = 0; c < width; c++) {
+      if (raw_counts[r * width + c] > 0) {
+        double d_val = neighborhood_density[r * width + c];
+        if (d_val > max_d) d_val = max_d;
+        
+        double norm = d_val / max_d;
+        int idx = (int)(norm * (n_bins - 1)) + 1;
+        if (idx > n_bins) idx = n_bins;
+        
+        if (cex_int == 1) {
+          res(r, c) = idx;
+        } else {
+          // Symmetric pixel offsets for exact centering
+          int r_offset_back = (cex_int - 1) / 2;
+          int r_offset_fwd  = cex_int / 2;
+          
+          int r_min = std::max(0, r - r_offset_back);
+          int r_max = std::min(height - 1, r + r_offset_fwd);
+          int c_min = std::max(0, c - r_offset_back);
+          int c_max = std::min(width - 1, c + r_offset_fwd);
+          
+          // Squared radius threshold for circular masking
+          double max_r2 = (cex_int / 2.0) * (cex_int / 2.0);
+          
+          for (int dr = r_min; dr <= r_max; dr++) {
+            for (int dc = c_min; dc <= c_max; dc++) {
+              
+              // Circular condition active for all cex >= 2
+              double dist_r = dr - r;
+              double dist_c = dc - c;
+              if ((dist_r * dist_r + dist_c * dist_c) > max_r2) continue;
+              
+              // Retain higher density color index on visual overlap
+              if (idx > res(dr, dc)) {
+                res(dr, dc) = idx;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
   return res;
 }

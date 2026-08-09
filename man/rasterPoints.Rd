@@ -12,6 +12,10 @@ rasterPoints(
   interpolate = F,
   ncores = 0,
   colorder = "default",
+  smooth = TRUE,
+  smooth_radius = 4L,
+  smooth_sigma = 2,
+  margin_pct = 0.05,
   force_new = FALSE,
   colramp = NULL,
   ...
@@ -30,6 +34,14 @@ rasterPoints(
 
 \item{colorder}{Character vector with the color priority order. Colors with higher colorder index has priority over the others. The "default" behavior is set the point color only the first time and ignore any new attempt to set the point color.}
 
+\item{smooth}{Logical. Apply Gaussian neighborhood kernel smoothing in density mode?}
+
+\item{smooth_radius}{Kernel neighborhood radius in pixels. Default is 4L.}
+
+\item{smooth_sigma}{Gaussian standard deviation. Default is 2.0.}
+
+\item{margin_pct}{Interior bounding box margin ratio (0.05). Prevents axis saturation artifacts.}
+
 \item{force_new}{Logical. Force create a new plot.}
 
 \item{...}{Graphic parameters passed to rasterImage/plot (see par()).}
@@ -41,7 +53,7 @@ Nothing.
 Plot scatter points using rasterImage. Open a graphic device if grDevices::dev.cur() == 1 (null device).
 }
 \examples{
-data<-matrix(rnorm(10^6), ncol = 2)
+data<-matrix(rnorm(1e6), ncol = 2)
 system.time({
   plot(data, type="n")
   points(data, pch = ".", type = "p", cex=1, col = "blue")

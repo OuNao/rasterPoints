@@ -7,12 +7,16 @@
 #' @param interpolate Logical. Passed to rasterImage.
 #' @param ncores Integer. Number of cores used (OpenMP). Defaul = 0 (max avaiable cores).
 #' @param colorder Character vector with the color priority order. Colors with higher colorder index has priority over the others. The "default" behavior is set the point color only the first time and ignore any new attempt to set the point color.
+#' @param smooth Logical. Apply Gaussian neighborhood kernel smoothing in density mode?
+#' @param smooth_radius Kernel neighborhood radius in pixels. Default is 4L.
+#' @param smooth_sigma Gaussian standard deviation. Default is 2.0.
+#' @param margin_pct Interior bounding box margin ratio (0.05). Prevents axis saturation artifacts.
 #' @param force_new Logical. Force create a new plot.
 #' @param ... Graphic parameters passed to rasterImage/plot (see par()).
 #' @return Nothing.
 #' @keywords raster, scatter, plot, points.
 #' @examples 
-#' data<-matrix(rnorm(10^6), ncol = 2)
+#' data<-matrix(rnorm(1e6), ncol = 2)
 #' system.time({
 #'   plot(data, type="n")
 #'   points(data, pch = ".", type = "p", cex=1, col = "blue")
@@ -22,7 +26,12 @@
 #'   rasterPoints(data, cex=1, col = "blue")
 #' })
 #' @export
-rasterPoints<-function(x, col="black", cex=1, interpolate = F, ncores = 0, colorder = "default", force_new = FALSE, colramp = NULL, ...) {
+rasterPoints<-function(x, col="black", cex=1, 
+                       interpolate = F, ncores = 0, 
+                       colorder = "default", smooth = TRUE, 
+                       smooth_radius = 4L, smooth_sigma = 2.0,
+                       margin_pct = 0.05, force_new = FALSE, 
+                       colramp = NULL, ...) {
   if (!is.matrix(x) || ncol(x)!=2 || nrow(x)<1) stop("x must be a matrix with 2 columns and >0 rows!", call. = F)
   if (any(!is.finite(x))) stop("The coordinate matrix 'x' cannot contain non-finite values (NA, NaN, Inf, -Inf)!", call. = F)
   if (!is.vector(col) || !is.character(col) || (length(col)!=1 && length(col) != nrow(x))) stop("col mus be a character vector of lenght 1 or nrow(x)", call. = F)
@@ -64,8 +73,24 @@ rasterPoints<-function(x, col="black", cex=1, interpolate = F, ncores = 0, color
   usr<-c(graphics::grconvertX(pict[1:2]/psize[1], "ndc","user"), graphics::grconvertY(pict[3:4]/psize[2], "ndc", "user"))
   size<-c(pict[2]-pict[1]+1, pict[4]-pict[3]+1)
   if (any(psize <= 0) || any(size <= 0)) stop("Invalid plot device size. Ensure graphics device is open and has a valid positive size.", call. = F)
-  if (colorder[1] == "density") {
-    img_idx <- data2raster_density(x, usr, size[1], size[2], 256, ncores)
+  if (colorder == "density") {
+    if (smooth) {
+      if (smooth_sigma <= 0) smooth_sigma <- 2.0
+      if (smooth_radius <= 0) smooth_radius <- 4L
+    }
+    img_idx <- data2raster_density(
+      x = x, 
+      usr = usr, 
+      width = as.integer(size[1]), 
+      height = as.integer(size[2]), 
+      n_bins = 256L,
+      smooth = as.logical(smooth),
+      smooth_radius = as.integer(smooth_radius),
+      smooth_sigma = as.numeric(smooth_sigma),
+      margin_pct = as.numeric(margin_pct),
+      cex = cex[1],
+      ncores = as.integer(ncores)
+    )
   } else {
     img_idx <- data2raster(x, col_idx, colorder_vec, usr, size[1], size[2], cex, ncores)
   }

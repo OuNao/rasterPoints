@@ -27,9 +27,14 @@ data2raster <- function(x, col_idx, colorder, usr, width, height, cex, ncores = 
 #' @param usr NumericVector with plot limits c(x1, x2, y1, y2).
 #' @param width Integer, output image width in pixels.
 #' @param height Integer, output image height in pixels.
+#' @param smooth Logical, Apply Gaussian neighborhood kernel smoothing in density mode?
+#' @param smooth_radius Integer, Kernel neighborhood radius in pixels. Default is 4L.
+#' @param smooth_sigma Double, Gaussian standard deviation. Default is 2.0.
+#' @param margin_pct Double, interior bounding box margin ratio (0.05). Prevents axis saturation artifacts.
+#' @param cex Double, point size scaling parameter.
 #' @param n_bins Integer, number of color steps (e.g., 256).
 #' @param ncores Integer, number of OpenMP threads.
-data2raster_density <- function(x, usr, width, height, n_bins = 256L, ncores = 0L) {
-    .Call('_rasterPoints_data2raster_density', PACKAGE = 'rasterPoints', x, usr, width, height, n_bins, ncores)
+data2raster_density <- function(x, usr, width, height, n_bins = 256L, smooth = FALSE, smooth_radius = 4L, smooth_sigma = 2.0, margin_pct = 0.05, cex = 1.0, ncores = 0L) {
+    .Call('_rasterPoints_data2raster_density', PACKAGE = 'rasterPoints', x, usr, width, height, n_bins, smooth, smooth_radius, smooth_sigma, margin_pct, cex, ncores)
 }
 
