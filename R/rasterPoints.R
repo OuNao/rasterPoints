@@ -73,7 +73,7 @@ rasterPoints<-function(x, col="black", cex=1,
   usr<-c(graphics::grconvertX(pict[1:2]/psize[1], "ndc","user"), graphics::grconvertY(pict[3:4]/psize[2], "ndc", "user"))
   size<-c(pict[2]-pict[1]+1, pict[4]-pict[3]+1)
   if (any(psize <= 0) || any(size <= 0)) stop("Invalid plot device size. Ensure graphics device is open and has a valid positive size.", call. = F)
-  if (colorder == "density") {
+  if (colorder[1] == "density") {
     if (smooth) {
       if (smooth_sigma <= 0) smooth_sigma <- 2.0
       if (smooth_radius <= 0) smooth_radius <- 4L
