@@ -51,7 +51,7 @@ rasterPoints<-function(x, col="black", cex=1,
   unique_colors <- levels(col_factor)
   if (colorder[1] != "default" && colorder[1] != "density"){
     if (any(is.na(colorder))) stop("colorder cannot contain NA values!", call. = F)
-    if (!all(colorder %in% unique_colors)) warning(" Some colors in 'colorder' do not exist in the 'col' vector!")
+    if (!all(unique_colors %in% colorder)) stop("Some colors in the 'col' vector do not exist in 'colorder'!",  call. = F)
   }
   if (colorder[1] == "default") {
     colorder_vec <- rep(0L, length(unique_colors))
