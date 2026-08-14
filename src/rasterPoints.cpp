@@ -184,7 +184,7 @@ IntegerMatrix data2raster_density(const NumericMatrix& x,
   }
   
   // ---------------------------------------------------------------------------
-  // STEP 3: Robust Maximum Search & Linear Mapping with Centered Circle Dilators
+  // STEP 3: Robust Min-Max Search & Linear Mapping with Centered Circle Dilators
   // ---------------------------------------------------------------------------
   int margin_x = (int)(width * margin_pct);
   int margin_y = (int)(height * margin_pct);
@@ -193,22 +193,37 @@ IntegerMatrix data2raster_density(const NumericMatrix& x,
   if (margin_y >= height / 2) margin_y = 0;
   
   double max_d = 0.0;
+  // Initialize min_d to a large value to find the true minimum density > 0
+  double min_d = 1e15;
   
   for (int r = margin_y; r < height - margin_y; r++) {
     for (int c = margin_x; c < width - margin_x; c++) {
       double d = neighborhood_density[r * width + c];
-      if (d > max_d) max_d = d;
+      if (d > 0.0) { // Only track populated pixels
+        if (d > max_d) max_d = d;
+        if (d < min_d) min_d = d; // Track dynamic minimum density
+      }
     }
   }
   
+  // Fallback if interior bounding box is completely empty
   if (max_d == 0.0) {
     for (size_t i = 0; i < neighborhood_density.size(); i++) {
-      if (neighborhood_density[i] > max_d) max_d = neighborhood_density[i];
+      double d = neighborhood_density[i];
+      if (d > 0.0) {
+        if (d > max_d) max_d = d;
+        if (d < min_d) min_d = d;
+      }
     }
   }
   
   IntegerMatrix res(height, width);
   if (max_d == 0.0) return res;
+  
+  // Fallback guard against division by zero if all non-zero pixels share the exact same density
+  if (max_d <= min_d) {
+    min_d = 0.0;
+  }
   
   int cex_int = (int)std::round(cex);
   if (cex_int < 1) cex_int = 1;
@@ -218,11 +233,19 @@ IntegerMatrix data2raster_density(const NumericMatrix& x,
     for (int c = 0; c < width; c++) {
       if (raw_counts[r * width + c] > 0) {
         double d_val = neighborhood_density[r * width + c];
-        if (d_val > max_d) d_val = max_d;
         
-        double norm = d_val / max_d;
+        // Clamp density value strictly between [min_d, max_d]
+        if (d_val > max_d) d_val = max_d;
+        if (d_val < min_d) d_val = min_d;
+        
+        // Full Min-Max scaling mapping [min_d, max_d] -> [0, 1]
+        // This guarantees that lowest non-zero density maps to color index 1 instead of mid-palette colors
+        double norm = (d_val - min_d) / (max_d - min_d);
+        
+        // Map normalized value to 1-based color indices [1, n_bins]
         int idx = (int)(norm * (n_bins - 1)) + 1;
         if (idx > n_bins) idx = n_bins;
+        if (idx < 1) idx = 1;
         
         if (cex_int == 1) {
           res(r, c) = idx;
