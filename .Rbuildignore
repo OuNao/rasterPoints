@@ -3,4 +3,6 @@
 ^\.github$
 ^CODE_OF_CONDUCT\.md$
 ^CONTRIBUTING\.md$
-^paper$
+^Figure1_colorder_comparison\.png$
+^paper\.bib$
+^paper\.md$
