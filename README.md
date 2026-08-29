@@ -32,17 +32,12 @@ y <- rnorm(N, mean = 5, sd = 1)
 mat <- cbind(x, y)
 usr <- c(range(x), range(y))
 
-# 1. Density Rasterization
-img_density <- data2raster_density(
+# High-Performance Density Rasterization Plot
+rasterPoints(
   x = mat, usr = usr, width = 800, height = 800,
-  smooth = TRUE, smooth_radius = 4, smooth_sigma = 2.0,
+  type = "density", smooth = TRUE, smooth_radius = 4, smooth_sigma = 2.0,
   margin_pct = 0.05, cex = 1.0, n_bins = 256
 )
-
-# Render raster in base R
-plot(NA, xlim = usr[1:2], ylim = usr[3:4], xlab = "FSC-A", ylab = "SSC-A")
-rasterImage(as.raster(matrix(terrain.colors(256)[img_density], 800, 800)), 
-            usr[1], usr[3], usr[2], usr[4])
 ```
 
 ## Citation
