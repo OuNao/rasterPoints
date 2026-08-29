@@ -38,6 +38,8 @@ Existing high-throughput plotting frameworks in R, such as `scattermore` [@scatt
 
 ![Visual comparison of standard rasterization versus priority-based rendering (`colorder`) on $10^7$ flow cytometry events. **A)** Standard chronological rasterization allows dominant background events (grey) to obscure a rare population (red). **B)** Priority-based rendering ensures that high-priority target events remain crisp and visible regardless of render order or density overlap. \label{fig:colorder}](Figure1_colorder_comparison.png)
 
+To demonstrate its utility and provide an accessible interface for researchers without R programming expertise, `rasterPoints` powers the web-based cytometry visualization platform [FlowDraw](https://www.flowdraw.com.br), enabling interactive rendering and gating of large-scale datasets directly in the browser.
+
 # Computational Performance and Benchmarks
 
 All benchmarks were evaluated on an Intel Core i7-10700 CPU (8 physical cores, 16 threads, 32 GB RAM) running R 4.3.2 on Windows 11 x64.

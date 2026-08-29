@@ -11,6 +11,10 @@
 - Dynamic Density Rasterization (`data2raster_density`): Combines 2D binning, parallel Gaussian smoothing, margin-based axis saturation guard, and full Min-Max normalization to prevent color palette truncation.
 - High Performance: Multi-threaded execution via OpenMP and Rcpp, offering up to 230x speedup over base R graphics with minimal memory footprint (~1.37 GB peak for 10M events).
 
+## Web Application
+
+`rasterPoints` powers the backend of **[FlowDraw](https://www.flowdraw.com.br)**, a web platform designed for fast, interactive visualization and analysis of high-dimensional cytometry data.
+
 ## Installation
 
 You can install the development version of rasterPoints from GitHub:
