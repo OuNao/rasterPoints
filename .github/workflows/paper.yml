@@ -3,16 +3,19 @@ on: [push, pull_request]
 jobs:
   paper:
     runs-on: ubuntu-latest
-    name: Generate PDF
+    name: Paper Draft
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Build PDF
-        uses: openjournals/openjournals-pdf-generator@main
+
+      - name: Build draft PDF
+        uses: openjournals/openjournals-draft-action@master
         with:
-          paper_path: paper 
-      - name: Upload PDF artifact
-        uses: actions/artifacts@v4
+          journal: joss
+          paper-path: paper/paper.md
+
+      - name: Upload PDF
+        uses: actions/upload-artifact@v4
         with:
-          name: joss-paper
-          path: '${{ steps.build-pdf.outputs.pdf_path }}'
+          name: paper-pdf
+          path: paper/paper.pdf
