@@ -41,7 +41,7 @@ Rather than contributing incremental patches to general-purpose scatter librarie
 - **Dynamic Density Rasterization (`data2raster_density`):** Integrates 2D spatial binning, parallel Gaussian neighborhood smoothing, axis saturation prevention via margin bounding, and centered circular pixel dilation into a single C++ pass with dynamic Min-Max density normalization across populated grid cells.
 - **Priority-Based Categorical Rendering (`colorder`):** Evaluates pre-categorized populations by explicit priority tiers rather than chronological drawing order, ensuring that high-value rare subsets are preserved during pixel projection (\autoref{fig:colorder}).
 
-![Visual comparison of standard rasterization versus priority-based rendering (`colorder`) on $10^7$ flow cytometry events. **A)** Standard chronological rasterization allows dominant background events (grey) to obscure a rare population (red). **B)** Priority-based rendering ensures that high-priority target events remain crisp and visible regardless of render order or density overlap. \label{fig:colorder}](paper/Figure1_colorder_comparison.png)
+![Visual comparison of standard rasterization versus priority-based rendering (`colorder`) on $10^7$ flow cytometry events. **A)** Standard chronological rasterization allows dominant background events (grey) to obscure a rare population (red). **B)** Priority-based rendering ensures that high-priority target events remain crisp and visible regardless of render order or density overlap. \label{fig:colorder}](Figure1_colorder_comparison.png)
 
 # Software design
 
