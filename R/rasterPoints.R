@@ -12,6 +12,7 @@
 #' @param smooth_sigma Gaussian standard deviation. Default is 2.0.
 #' @param margin_pct Interior bounding box margin ratio (0.05). Prevents axis saturation artifacts.
 #' @param force_new Logical. Force create a new plot.
+#' @param colramp function accepting an integer n as an argument and returning n colors.
 #' @param ... Graphic parameters passed to rasterImage/plot (see par()).
 #' @return Nothing.
 #' @keywords raster, scatter, plot, points.

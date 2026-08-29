@@ -44,6 +44,8 @@ rasterPoints(
 
 \item{force_new}{Logical. Force create a new plot.}
 
+\item{colramp}{function accepting an integer n as an argument and returning n colors.}
+
 \item{...}{Graphic parameters passed to rasterImage/plot (see par()).}
 }
 \value{
