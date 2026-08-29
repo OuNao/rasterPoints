@@ -28,13 +28,13 @@ authors:
 
 affiliations:
 
-&#x20; - name: D'Or Institute for Research and Education (IDOR), São Paulo, Brazil
+&#x20; - index: 1
 
-&#x20;   index: 1
+&#x20;   name: 'D''Or Institute for Research and Education (IDOR), São Paulo, Brazil'
 
 date: 29 August 2026
 
-bibliography: paper.bib
+bibliography: paper/paper.bib
 
 \---
 
