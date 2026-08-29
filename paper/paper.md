@@ -28,7 +28,7 @@ authors:
 
 affiliations:
 
-&#x20; - name: Independent Researcher, São Paulo, Brazil
+&#x20; - name: D'Or Institute for Research and Education (IDOR), São Paulo, Brazil
 
 &#x20;   index: 1
 
