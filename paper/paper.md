@@ -1,6 +1,6 @@
 \---
 
-title: 'rasterPoints: Fast Density-Based Bivariate Rasterization and Priority-Based Rendering for Large-Scale Cytometry and Single-Cell Data in R'
+title: "rasterPoints: Fast Density-Based Bivariate Rasterization and Priority-Based Rendering for Large-Scale Cytometry and Single-Cell Data in R"
 
 tags:
 
@@ -20,7 +20,7 @@ tags:
 
 authors:
 
-&#x20; - name: Sérgio Costa Fortier
+&#x20; - name: "Sérgio Costa Fortier""
 
 &#x20;   orcid: 0000-0002-4539-6825
 
@@ -28,13 +28,13 @@ authors:
 
 affiliations:
 
-&#x20; - index: 1
+&#x20; - name: "D'Or Institute for Research and Education (IDOR), São Paulo, Brazil""
 
-&#x20;   name: 'D''Or Institute for Research and Education (IDOR), São Paulo, Brazil'
+&#x20;   index: 1
 
-date: 29 August 2026
+date: "29 August 2026""
 
-bibliography: paper/paper.bib
+bibliography: "paper/paper.bib"
 
 \---
 
