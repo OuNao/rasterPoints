@@ -15,6 +15,16 @@
 
 `rasterPoints` powers the backend of **[FlowDraw](https://www.flowdraw.com.br)**, a web platform designed for fast, interactive visualization and analysis of high-dimensional cytometry data.
 
+## Benchmarks & Performance
+
+`rasterPoints` delivers up to a **200x speedup** over base R graphics and up to a **10x speedup** over `scattermore` for multi-million point datasets while reducing peak memory consumption by **~89%**.
+
+The full benchmarking script and execution logs can be found in the [`benchmarks/`](./benchmarks/) directory. To reproduce the benchmarks on your system, run:
+
+```r
+source("benchmarks/run_benchmarks.R")
+```
+
 ## Installation
 
 You can install the development version of rasterPoints from GitHub:

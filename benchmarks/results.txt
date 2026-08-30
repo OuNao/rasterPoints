@@ -1,0 +1,76 @@
+Intel(R) Core(TM) i7-10700 CPU @ 2.90GHz
+==================================================================
+              ESPECIFICAÇÕES DO AMBIENTE DE TESTE                 
+==================================================================
+OS:               Windows 11 x64 (build 26100) 
+Versão do R:      R version 4.3.2 (2023-10-31 ucrt) 
+Plataforma:       x86_64-w64-mingw32 
+Cores Físicos:    8 
+Cores Lógicos:    16 
+==================================================================
+
+> print(bench_rendering, n=24)
+# A tibble: 24 × 14
+   expression                 min   median `itr/sec` mem_alloc `gc/sec` n_itr  n_gc total_time result memory                 time           gc       n_points
+   <bch:expr>            <bch:tm> <bch:tm>     <dbl> <bch:byt>    <dbl> <int> <dbl>   <bch:tm> <list> <list>                 <list>         <list>      <dbl>
+ 1 Base_R                   1.44s    1.45s   0.687     10.72MB  0.229       3     1      4.37s <NULL> <Rprofmem [217 × 3]>   <bench_tm [3]> <tibble>   100000
+ 2 Scattermore_Base         1.15s    1.18s   0.848    174.53MB  2.83        3    10      3.54s <NULL> <Rprofmem [230 × 3]>   <bench_tm [3]> <tibble>   100000
+ 3 Scattermore_ggplot    220.11ms  230.5ms   4.12     218.49MB 15.1         3    11   728.38ms <NULL> <Rprofmem [6,447 × 3]> <bench_tm [3]> <tibble>   100000
+ 4 Rasterpoints_Default  606.75ms 609.72ms   1.63      35.44MB  1.63        3     3      1.84s <NULL> <Rprofmem [88 × 3]>    <bench_tm [3]> <tibble>   100000
+ 5 Rasterpoints_Colorder 601.13ms 605.44ms   1.64      35.39MB  1.64        3     3      1.83s <NULL> <Rprofmem [45 × 3]>    <bench_tm [3]> <tibble>   100000
+ 6 Rasterpoints_Density   61.22ms  68.37ms  15.0       33.79MB 10.0         3     2   199.91ms <NULL> <Rprofmem [131 × 3]>   <bench_tm [3]> <tibble>   100000
+ 7 Base_R                  14.16s   14.24s   0.0701   103.07MB  0.0468      3     2     42.78s <NULL> <Rprofmem [22 × 3]>    <bench_tm [3]> <tibble>  1000000
+ 8 Scattermore_Base        10.14s   10.29s   0.0976   407.69MB  0.456       3    14     30.73s <NULL> <Rprofmem [85 × 3]>    <bench_tm [3]> <tibble>  1000000
+ 9 Scattermore_ggplot    930.04ms 955.29ms   1.04       1.34GB 13.2         3    38      2.88s <NULL> <Rprofmem [1,147 × 3]> <bench_tm [3]> <tibble>  1000000
+10 Rasterpoints_Default     1.15s    1.18s   0.850    155.69MB  0.850       3     3      3.53s <NULL> <Rprofmem [45 × 3]>    <bench_tm [3]> <tibble>  1000000
+11 Rasterpoints_Colorder    1.17s    1.18s   0.850    155.69MB  0.850       3     3      3.53s <NULL> <Rprofmem [45 × 3]>    <bench_tm [3]> <tibble>  1000000
+12 Rasterpoints_Density  127.37ms 128.42ms   7.60     153.94MB 10.1         3     4   394.52ms <NULL> <Rprofmem [68 × 3]>    <bench_tm [3]> <tibble>  1000000
+13 Base_R                   1.17m    1.18m   0.0142   515.05MB  0.00944     3     2      3.53m <NULL> <Rprofmem [22 × 3]>    <bench_tm [3]> <tibble>  5000000
+14 Scattermore_Base        49.49s   49.72s   0.0201     1.41GB  0.0739      3    11      2.48m <NULL> <Rprofmem [85 × 3]>    <bench_tm [3]> <tibble>  5000000
+15 Scattermore_ggplot       3.83s    3.85s   0.259      6.41GB  4.31        3    50     11.59s <NULL> <Rprofmem [1,147 × 3]> <bench_tm [3]> <tibble>  5000000
+16 Rasterpoints_Default     1.57s    1.61s   0.613    715.23MB  0.817       3     4      4.89s <NULL> <Rprofmem [45 × 3]>    <bench_tm [3]> <tibble>  5000000
+17 Rasterpoints_Colorder     1.6s     1.6s   0.623    715.23MB  0.831       3     4      4.82s <NULL> <Rprofmem [45 × 3]>    <bench_tm [3]> <tibble>  5000000
+18 Rasterpoints_Density  366.54ms 367.29ms   2.66     713.48MB  4.44        3     5      1.13s <NULL> <Rprofmem [68 × 3]>    <bench_tm [3]> <tibble>  5000000
+19 Base_R                   2.35m    2.35m   0.00710    1.01GB  0.00710     3     3      7.04m <NULL> <Rprofmem [22 × 3]>    <bench_tm [3]> <tibble> 10000000
+20 Scattermore_Base         1.65m    1.66m   0.0101     2.68GB  0.0369      3    11      4.97m <NULL> <Rprofmem [85 × 3]>    <bench_tm [3]> <tibble> 10000000
+21 Scattermore_ggplot       7.21s    7.29s   0.136     12.74GB  2.45        3    54     22.02s <NULL> <Rprofmem [1,147 × 3]> <bench_tm [3]> <tibble> 10000000
+22 Rasterpoints_Default     1.92s     2.1s   0.488      1.38GB  0.651       3     4      6.15s <NULL> <Rprofmem [45 × 3]>    <bench_tm [3]> <tibble> 10000000
+23 Rasterpoints_Colorder    1.98s    2.01s   0.496      1.38GB  0.496       3     3      6.05s <NULL> <Rprofmem [45 × 3]>    <bench_tm [3]> <tibble> 10000000
+24 Rasterpoints_Density  614.11ms 696.16ms   1.45       1.37GB  1.45        3     3      2.07s <NULL> <Rprofmem [68 × 3]>    <bench_tm [3]> <tibble> 10000000
+
+> print(bench_openmp)
+        expression threads       min    median   itr/sec  mem_alloc    gc/sec n_itr n_gc total_time result median_sec  speedup
+1   Kernel_Default       1 2.8410320 2.8679489 0.3479292 1492237392 0.6262725     5    9  14.370741   NULL  2.8679489 1.000000
+2  Kernel_Colorder       1 2.8230398 2.8564316 0.3473815 1492237392 0.6252867     5    9  14.393397   NULL  2.8564316 1.000000
+3   Kernel_Density       1 0.7887764 0.8149538 1.2336356 1489139384 1.4803627     5    6   4.053061   NULL  0.8149538 1.000000
+4   Kernel_Default       2 2.8004075 2.8250389 0.3545345 1492237392 0.7090691     5   10  14.102998   NULL  2.8250389 1.015189
+5  Kernel_Colorder       2 2.8172593 2.8375017 0.3508996 1492237392 0.4912594     5    7  14.249091   NULL  2.8375017 1.006671
+6   Kernel_Density       2 0.7472322 0.7896013 1.2860183 1489139384 2.0576293     5    8   3.887970   NULL  0.7896013 1.032108
+7   Kernel_Default       4 2.7978299 2.8053206 0.3537272 1492237392 0.5659635     5    8  14.135187   NULL  2.8053206 1.022325
+8  Kernel_Colorder       4 2.7643737 2.8016590 0.3568881 1492237392 0.4282657     5    6  14.009993   NULL  2.8016590 1.019550
+9   Kernel_Density       4 0.7084010 0.7308288 1.3413975 1489139384 1.8779565     5    7   3.727456   NULL  0.7308288 1.115109
+10  Kernel_Default       8 2.7461415 2.7717793 0.3589593 1492237392 0.4307512     5    6  13.929155   NULL  2.7717793 1.034696
+11 Kernel_Colorder       8 2.7024604 2.7693471 0.3610126 1492237392 0.5054177     5    7  13.849931   NULL  2.7693471 1.031446
+12  Kernel_Density       8 0.6964375 0.7220685 1.3880508 1489139384 2.2208813     5    8   3.602174   NULL  0.7220685 1.128638
+13  Kernel_Default      16 2.7024416 2.7687345 0.3612415 1492237392 0.4334898     5    6  13.841155   NULL  2.7687345 1.035834
+14 Kernel_Colorder      16 2.7594613 2.7693925 0.3590645 1492237392 0.5026903     5    7  13.925075   NULL  2.7693925 1.031429
+15  Kernel_Density      16 0.6798967 0.7254753 1.3746193 1489139384 2.1993910     5    8   3.637371   NULL  0.7254753 1.123338
+
+> print(bench_results)
+Unit: milliseconds
+                                           expr       min        lq      mean    median        uq       max neval
+           densCols (R) + data2raster (Default) 2864.4589 2901.6417 2944.3489 2959.7123 2975.0138 3026.1301    10
+         data2raster_density (Fast - No Smooth)  270.5925  299.9768  327.0002  320.3600  338.1315  420.7903    10
+ data2raster_density (Gaussian Smooth r=4, s=2)  300.1993  315.3685  327.4488  323.8952  328.3352  387.8490    10
+   data2raster_density (Smooth + Dilated cex=3)  276.7367  306.3162  320.7987  315.3671  340.7855  397.9426    10
+   
+> print(bm_openmp, unit = "ms")
+Unit: milliseconds
+                          expr       min        lq      mean    median        uq       max neval
+        1 Thread (Single-core) 1367.6796 1391.5820 1425.1214 1427.0574 1459.6666 1469.7921    10
+                     2 Threads  937.1373  959.6590  991.4643  981.8465 1040.3248 1041.7869    10
+                     4 Threads  901.2952  926.7611  992.3791 1016.9483 1030.4985 1041.0264    10
+                     8 Threads  676.8333  686.2124  710.9557  697.8907  741.8328  755.5992    10
+ All Cores (Auto / ncores = 0)  557.6825  560.8416  595.5635  589.7018  624.5191  653.9069    10
+ 
+ 

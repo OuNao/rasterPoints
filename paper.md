@@ -89,4 +89,8 @@ rasterPoints(
 
 We acknowledge the open-source R and C++ developer communities, particularly the authors and maintainers of `Rcpp`.
 
+# AI usage disclosure
+
+Generative AI tools (specifically Google Gemini) were utilized during the preparation of this manuscript to assist with copyediting, translation, formatting markdown structure according to JOSS guidelines, and streamlining benchmarking discussions. All code, algorithms, data analysis, and scientific conclusions were authored, verified, and validated independently by the author.
+
 # References
